@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>coder-app-name</title>
+    <title>Tic Tac Toe</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <style>
-      /* 内联样式确保主题色立即生效，避免闪烁 */
+      /* Inline styles to prevent flash of unstyled content */
       html,
       body {
         margin: 0;
@@ -20,16 +20,16 @@
       html.light,
       html.light body {
         background-color: #ffffff !important;
-        color: #000000;
+        color: #1e293b;
       }
       html.dark,
       html.dark body {
-        background-color: #1a1a1a !important;
-        color: #ffffff;
+        background-color: #0f172a !important;
+        color: #f1f5f9;
       }
     </style>
     <script>
-      // 在 React 加载前立即设置主题，避免闪烁
+      // Pre-React theme initialization to prevent flash
       (function () {
         const isInIframe = window.self !== window.top;
 
@@ -39,20 +39,28 @@
           document.documentElement.setAttribute("data-theme", theme);
         }
 
+        // Check saved theme preference
+        var savedTheme = localStorage.getItem('ttt-theme') || 'system';
+        var resolvedTheme = 'light';
+        
+        if (savedTheme === 'dark') {
+          resolvedTheme = 'dark';
+        } else if (savedTheme === 'system') {
+          resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
         if (isInIframe) {
-          // 监听父窗口主动推送的主题消息
           window.addEventListener("message", function (event) {
             if (event.data && typeof event.data.theme === "string") {
-              const theme = event.data.theme;
+              var theme = event.data.theme;
               if (theme === "light" || theme === "dark") {
                 applyThemeToDOM(theme);
               }
             }
           });
-        } else {
-          // 非 iframe 环境，使用默认 light 主题
-          applyThemeToDOM("light");
         }
+        
+        applyThemeToDOM(resolvedTheme);
       })();
     </script>
       <script>
@@ -92,6 +100,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
